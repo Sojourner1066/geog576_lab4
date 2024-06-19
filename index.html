@@ -68,15 +68,15 @@
           position: "top-left"
         });
 
-        // const searchWidget = new Search({
-        //   view: view
-        // });
-        // // Adds the search widget below other elements in
-        // // the top left corner of the view
-        // view.ui.add(searchWidget, {
-        //   position: "top-right",
-        //   index: 2
-        // });
+        const searchWidget = new Search({
+          view: view
+        });
+        // Adds the search widget below other elements in
+        // the top left corner of the view
+        view.ui.add(searchWidget, {
+          position: "top-right",
+          index: 2
+        });
 
         // Create featurelayer from feature service 
         const layer = new FeatureLayer({ 
@@ -84,7 +84,7 @@
           url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_46b82e4cd3b74d76a7810be30eda71b4_results/FeatureServer"
         });
 
-        //map.add(layer);
+        map.add(layer);
         
       });
     </script>
