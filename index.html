@@ -28,29 +28,6 @@
       zoom: 10, // Zoom level
       container: "viewDiv" // Div element
     });
-    
-    // Adding the military airport feature layer to the map
-    const militaryAirportRenderer = {
-      "type": "simple",
-      "symbol": {
-        "type": "picture-marker",
-        "url": "https://sojourner1066.github.io/geog576_lab2/radar_24dp.png",
-        "width": "18px",
-        "height": "18px"
-      }
-    };
- 
-    const militaryAirportLayer = new FeatureLayer({
-      url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Natural_Earth_Airports/FeatureServer",
-      //url:"https://services.arcgis.com/HRPe58bUyBqyyiCt/ArcGIS/rest/services/Natural_Earth_Airports/FeatureServer/0/query?where=type+LIKE+%27%25military%25%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=html&token=",
-      outFields: ["name","wikipedia"],
-      popupTemplate: popupAirports,
-      renderer: militaryAirportRenderer,
-      definitionExpression: "type LIKE '%military%'", //adding sql to filter for airports
-      labelingInfo: [airportLabels] //adding the labels
-    });
-
-    map.add(militaryAirportLayer);
 
   });
  </script>
