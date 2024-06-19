@@ -51,11 +51,11 @@
         const map = new Map({
           basemap: "satellite"
         });
-        
+        // create a mapview with a center on Cambrige UK and a zoom level of the city
         const view = new MapView({
           map: map,// References the map object
           center: [0.125321, 52.206045],   // Longitude, latitude
-          zoom: 10, // Zoom level
+          zoom: 15, // Zoom level
           container: "viewDiv" // Reference to the DOM node that will contain the view
         });
 
@@ -71,19 +71,20 @@
         const searchWidget = new Search({
           view: view
         });
-        // Adds the search widget below other elements in
-        // the top left corner of the view
+        // Adds the search widget below other elements
         view.ui.add(searchWidget, {
           position: "bottom-right",
           index: 2
         });
 
-        // Create featurelayer from feature service 
+        // Create featurelayer from feature service
+        // this service is the results layer from the survey
         const layer = new FeatureLayer({ 
           // URL to the service 
           url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/survey123_46b82e4cd3b74d76a7810be30eda71b4_results/FeatureServer"
         });
 
+        // add the layer into the map object
         map.add(layer);
         
       });
