@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hello, Map! </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.25/"></script>
+
+<script>  
+  require(["esri/config", 
+           "esri/Map", 
+           "esri/views/MapView", 
+           "esri/Graphic",  
+           "esri/layers/GraphicsLayer",
+           "esri/geometry/Polyline",
+           "esri/geometry/Polygon",
+           "esri/layers/FeatureLayer",
+           "esri/widgets/Editor"
+          ], 
+           function(esriConfig, Map, MapView, Graphic, GraphicsLayer, Polyline, Polygon, FeatureLayer,Editor) {
+    esriConfig.apiKey = "AAPK81b7cca05fd44c15a03618aa1d5dd08bZ1H0FAlNGuWt3LBhlRWCK906HeAPjeUnUsp30Hja37HR_MwAO3BPqQO2D-rMlJTE"
+
+    const map = new Map({ 
+      basemap: "satellite" // Basemap layer services 
+    });
+
+    const view = new MapView({
+      map: map,
+      center: [-0.630556, 52.809167], // Longitude, latitude
+      zoom: 10, // Zoom level
+      container: "viewDiv" // Div element
+    });
+    const graphicsLayer = new GraphicsLayer();  
+    
+    map.add(graphicsLayer);
+
+    const point = { //Create a point  
+      type: "point",  
+      longitude: -0.630556,    //long lat of Isaac Newton's home
+      latitude: 52.809167
+    };
+
+    const simpleMarkerSymbol = {  
+      type: "simple-marker",
+      style: "diamond",
+      color: [0, 0, 139],  // Color of blues rock
+      outline: {  
+        color: [255, 255, 255], // White  
+        width: 1
+      }  
+    };
+
+    const popupTemplate = {
+      title: "{Name}",
+      content: "{Description}"
+    }
+    const attributes = {
+        Name: "Isaac Newton's Home",
+        Description: "This is the location where Newton wrote his most influential works. The apple tree is in the yard."
+    }
+
+    const pointGraphic = new Graphic({  
+      geometry: point,  
+      symbol: simpleMarkerSymbol,
+      attributes: attributes,
+      popupTemplate: popupTemplate
+    });
+
+    graphicsLayer.add(pointGraphic);
+
+  // Code to add Polyline to the map
+  // 2D polyline with to paths with m-values (note that the 2nd path does not have m-values defined)
+    let paths = [
+    [  // first path
+      [-0.630456, 52.808167],
+      [-0.630446, 52.808267],
+      [-0.630436, 52.808367]
+    ]
+    ];
+
+    let polyline = new Polyline({
+      hasZ: false,
+      hasM: false,
+      paths: paths,
+      spatialReference: { wkid: 4326 }
+    });
+
+    const lineSymbol = {
+    type: "simple-line", // autocasts as new SimpleLineSymbol()
+    color: [226, 119, 40], // RGB color values as an array
+    width: 4
+  };
+  const polylineGraphic = new Graphic({
+    geometry: polyline, // Add the geometry created in step 3
+    symbol: lineSymbol, // Add the symbol created in step 4
+    //attributes: lineAtt // Add the attributes created in step 5
+  });
+
+  graphicsLayer.add(polylineGraphic);
+
+  // Code to add Polyline to the map
+  // 2D polyline with to paths with m-values (note that the 2nd path does not have m-values defined)
+  let rings = [
+  [
+            [
+              -0.630261922515416,
+              52.80968809677498
+            ],
+            [
+              -0.6307929999005637,
+              52.809629729938564
+            ],
+            [
+              -0.6308520084997156,
+              52.8094675994264
+            ],
+            [
+              -0.6310236698766687,
+              52.809428688013725
+            ],
+            [
+              -0.6314367300647632,
+              52.809256828856746
+            ],
+            [
+              -0.631093407310857,
+              52.80863099637472
+            ],
+            [
+              -0.6299185997615098,
+              52.8088936525549
+            ],
+            [
+              -0.630261922515416,
+              52.80968809677498
+            ]
+          ]
+    ];
+
+    let polygon = new Polygon({
+      centroid: point,
+      hasZ: false,
+      hasM: false,
+      rings: rings,
+      spatialReference: { wkid: 4326 }
+    });
+
+    const polySymbol = {
+      type: "simple-fill",  // autocasts as new SimpleFillSymbol()
+      color: [ 51,51, 204, 0.4],
+      style: "solid",
+      outline: {  // autocasts as new SimpleLineSymbol()
+        color: "white",
+        width: 1
+      }
+  };
+  const polygonGraphic = new Graphic({
+    geometry: polygon,
+    symbol: polySymbol,
+  });
+
+  graphicsLayer.add(polygonGraphic);
+
+
+  // Adding the feature layer to the map
+
+  // Define a pop-up for nationalTrustLayer
+  const popupNTrust = {
+    "title": "National Trust Protected Lands",
+    "content": "<b>Name:</b> {NAME}<br><b>Total Area Under Protection:</b>{Shape__Area_2}<br>"
+  }
+  const nationalTrustLayer = new FeatureLayer({
+    url: "https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/arcgis/rest/services/National_Trust_Open_Data_Land_Always_Open/FeatureServer",
+    outFields: ["NAME","Shape__Area_2"],
+    popupTemplate: popupNTrust
+  });
+  map.add(nationalTrustLayer);
+
+  // Adding the airport feature layer to the map
+  const airportRenderer = {
+    "type": "simple",
+    "symbol": {
+      "type": "picture-marker",
+      "url": "https://sounny.github.io/agol/outline_local_airport_black_24dp.png",
+      "width": "18px",
+      "height": "18px"
+    }
+  };
+
+    // Adding the military airport feature layer to the map
+    const militaryAirportRenderer = {
+    "type": "simple",
+    "symbol": {
+      "type": "picture-marker",
+      "url": "https://sojourner1066.github.io/geog576_lab2/radar_24dp.png",
+      "width": "18px",
+      "height": "18px"
+    }
+  };
+  // Define a pop-up for airportLayer
+  const popupAirports = {
+    "title": "World Wide Airports",
+    "content": '<b>Name:</b> {name}<br><a href="{wikipedia}">Wikipedia Link</a><br>'
+  };
+  const airportLabels = {
+    symbol: {
+      type: "text",
+      color: "#FFFFFF",
+      haloColor: "#5E8D74",
+      haloSize: "2px",
+      font: {
+        size: "12px",
+        family: "Noto Sans",
+        style: "italic",
+        weight: "normal"
+      }
+    },
+    labelPlacement: "above-center",
+    labelExpressionInfo: {
+      expression: "$feature.name"
+    }
+  };
+
+  const airportLayer = new FeatureLayer({
+    url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Natural_Earth_Airports/FeatureServer",
+    outFields: ["name","wikipedia"],
+    popupTemplate: popupAirports,
+    renderer: airportRenderer,
+    definitionExpression: "type = 'major'", //adding sql to filter for airports
+    labelingInfo: [airportLabels] //adding the labels
+  });
+  map.add(airportLayer);
+
+  const militaryAirportLayer = new FeatureLayer({
+    url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/Natural_Earth_Airports/FeatureServer",
+    //url:"https://services.arcgis.com/HRPe58bUyBqyyiCt/ArcGIS/rest/services/Natural_Earth_Airports/FeatureServer/0/query?where=type+LIKE+%27%25military%25%27&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=html&token=",
+    outFields: ["name","wikipedia"],
+    popupTemplate: popupAirports,
+    renderer: militaryAirportRenderer,
+    definitionExpression: "type LIKE '%military%'", //adding sql to filter for airports
+    labelingInfo: [airportLabels] //adding the labels
+  });
+  map.add(militaryAirportLayer);
+
+  //adding the const for the feature layer
+  const myAirports = new FeatureLayer({
+    url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/My_Airports_GEOG576/FeatureServer",
+ 
+  //adding the popup here
+    outFields: ["iata_code"],
+  });
+
+  //adding the feature layer to the map
+  map.add(myAirports);
+
+  // Set the point layer's LayerInfo
+  const pointInfos = {
+    layer: myAirports
+  }
+
+  // Begin Editor constructor
+  const editor = new Editor({
+    view: view,
+    layerInfos: [pointInfos]
+  }); // End Editor constructor
+
+  // Add the widget to the view
+  view.ui.add(editor, "top-right");
+
+  });
+ </script>
+
+<style>  html,  body,  #viewDiv {  padding: 0;  margin: 0;  height: 100%;  width: 100%;  }  </style> 
+
+</head>
+<body>
+  <!-- <h1>Hello, world!I am using GIT</h1> -->
+  <div id="viewDiv"></div> 
+</body>
+</html>
