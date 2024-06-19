@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hello, Map! </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.25/"></script>
+
+<script>  
+  require(["esri/config",
+           "esri/Map",
+           "esri/views/MapView", 
+          ], 
+  function(esriConfig, Map, MapView) {
+    esriConfig.apiKey = "AAPK81b7cca05fd44c15a03618aa1d5dd08bZ1H0FAlNGuWt3LBhlRWCK906HeAPjeUnUsp30Hja37HR_MwAO3BPqQO2D-rMlJTE"
+
+    const map = new Map({ 
+      basemap: "satellite" // Basemap layer service 
+    });
+
+    const view = new MapView({
+      map: map,
+      center: [-0.630556, 52.809167], // Longitude, latitude
+      zoom: 18, // Zoom level
+      container: "viewDiv" // Div element
+    });
+  });
+ </script>
+
+<style>  html,  body,  #viewDiv {  padding: 0;  margin: 0;  height: 100%;  width: 100%;  }  </style> 
+
+</head>
+<body>
+  <!-- <h1>Hello, world!I am using GIT</h1> -->
+  <div id="viewDiv"></div> 
+</body>
+</html>
